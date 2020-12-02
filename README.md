@@ -1,0 +1,52 @@
+# led-piscar10vezes
+byte botao = 8;
+ byte led = 3;
+
+ bool estadoanterior = 1;
+ bool estadoatual = 1;
+ bool evento = 1;
+
+ int apertado;
+ int solto;
+
+
+ unsigned long TempoDebounce = 0;
+ unsigned long TempoFiltro = 50;
+
+void setup()
+{
+  pinMode(botao, INPUT_PULLUP);
+  pinMode(led, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+
+estadoatual = digitalRead(botao);
+  
+  if(estadoatual != estadoanterior)
+  {
+   TempoDebounce = millis(); 
+  }
+  
+  	if((millis()-TempoDebounce)>= TempoFiltro);
+  	{
+    	if(estadoatual != evento)
+    	{
+    	 evento = estadoatual;
+          if(!estadoatual) //Botão apertado
+          {
+            for (int l = 0; l < 10; l++)
+ 			{
+   			 digitalWrite(led, HIGH);
+   			 delay (500);
+   		     digitalWrite(led, LOW);
+  		     delay (500);
+  		     Serial.println(l);
+            }
+           }
+         }
+    }
+  estadoanterior = estadoatual;
+}
